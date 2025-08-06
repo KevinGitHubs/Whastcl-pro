@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Whatscl – Chat</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+  <header>
+    <button class="back-btn" onclick="history.back()">←</button>
+    <img class="avatar-small" id="chatAvatar" src="assets/logo.png"/>
+    <div id="chatTitle"></div>
+    <button class="share-btn" onclick="copyLink()">🔗</button>
+  </header>
+  <main class="chat-page">
+    <div id="messages"></div>
+    <div class="input-area" id="inputArea">
+      <button onclick="attachFile()">📎</button>
+      <input id="msgInput" placeholder="Ketik pesan…"/>
+      <button onclick="recordVoice()">🎤</button>
+      <button onclick="sendText()">➤</button>
+    </div>
+  </main>
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  <script src="chat-pro.js"></script>
+</body>
+</html>
