@@ -10,13 +10,25 @@
   <header>
     <img src="assets/logo.png" class="logo-img"/>
     <h1>Whatscl</h1>
+    <button id="adminGear" class="gear-btn" onclick="toggleAdmin()">⚙️</button>
   </header>
+
   <main class="channel-page">
     <div class="channel-header">Channels</div>
     <div class="channel-list" id="channelList"></div>
     <button class="fab" onclick="createChannel()">+</button>
   </main>
-  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+
+  <!-- Modal Admin -->
+  <div class="modal" id="adminModal">
+    <div class="modal-content">
+      <span class="close" onclick="closeAdmin()">&times;</span>
+      <h2>Mode Admin</h2>
+      <input id="adminName" placeholder="Nama baru channel" />
+      <button onclick="renameChannel()">Simpan</button>
+    </div>
+  </div>
+
   <script src="channels.js"></script>
 </body>
 </html>
