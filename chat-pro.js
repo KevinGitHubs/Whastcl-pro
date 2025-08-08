@@ -6,17 +6,13 @@ if(!c){alert('Channel tidak ditemukan');location.href='index.html';}
 
 document.getElementById('chatTitle').textContent=c.name;
 
-/* enkripsi ringan */
-async function encrypt(msg){
-  const iv = crypto.getRandomValues(new Uint8Array(12));
-  const key = await crypto.subtle.importKey('raw',new TextEncoder().encode('whatscl-secret'),'AES-GCM',false,['encrypt']);
-  const cipher = await crypto.subtle.encrypt({name:'AES-GCM',iv},key,new TextEncoder().encode(msg));
-  return {iv:[...iv],cipher:[...new Uint8Array(cipher)]};
+function encrypt(msg){
+  const enc=new TextEncoder();
+  const cipher=btoa(msg); // simple encode
+  return cipher;
 }
-async function decrypt(obj){
-  const key = await crypto.subtle.importKey('raw',new TextEncoder().encode('whatscl-secret'),'AES-GCM',false,['decrypt']);
-  const plain = await crypto.subtle.decrypt({name:'AES-GCM',iv:new Uint8Array(obj.iv)},key,new Uint8Array(obj.cipher));
-  return new TextDecoder().decode(plain);
+function decrypt(str){
+  return atob(str);
 }
 
 function renderChat(){
@@ -25,7 +21,7 @@ function renderChat(){
   (c.msgs||[]).forEach(m=>{
     const div=document.createElement('div');
     div.className='msg '+(m.sender===uid?'sent':'received');
-    let content=m.type==='text'?decrypt(m.data):m.data;
+    let content=m.type==='text'?decrypt(m.text):m.data;
     if(m.type==='voice')content=`<audio controls src="${m.data}"></audio>`;
     if(m.type==='file')content=`<a href="${m.data}" target="_blank" style="color:#00ffc8">📁 ${m.name}</a>`;
     const left=Math.max(0,300-Math.floor((Date.now()-m.ts)/1000));
@@ -53,21 +49,20 @@ function like(id){
   if(m){m.likes=(m.likes||0)+1;localStorage.setItem('channels',JSON.stringify(channels));renderChat();}
 }
 function toggleComment(id){
-  const box=document.getElementById(`comment-${id}`);
+  const box=document.getElementById(`comment-${m.id}`);
   box.style.display=box.style.display==='block'?'none':'block';
 }
-async function sendComment(e,id){
+function sendComment(e,id){
   if(e.key!=='Enter')return;
   const val=e.target.value.trim();if(!val)return;
   const m=c.msgs.find(m=>m.id===id);
   if(m){m.comments=m.comments||[];m.comments.push(val);e.target.value='';localStorage.setItem('channels',JSON.stringify(channels));renderChat();}
 }
-async function sendText(){
+function sendText(){
   const val=document.getElementById('msgInput').value.trim();
   if(!val)return;
   if(c.adminOnly){alert('Hanya admin');return;}
-  const enc=await encrypt(val);
-  c.msgs.push({type:'text',data:enc,sender:uid,ts:Date.now(),id:Date.now()});
+  c.msgs.push({type:'text',text:encrypt(val),sender:uid,ts:Date.now(),id:Date.now()});
   localStorage.setItem('channels',JSON.stringify(channels));
   renderChat();
 }
@@ -100,5 +95,4 @@ function copyLink(){
   alert('Tautan salin ke clipboard!');
 }
 setInterval(()=>{c.msgs=c.msgs.filter(m=>Date.now()-m.ts<5*60*1000);localStorage.setItem('channels',JSON.stringify(channels));renderChat();},1000);
-setInput();
 renderChat();
