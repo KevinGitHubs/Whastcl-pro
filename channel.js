@@ -1,11 +1,11 @@
 const uid = crypto.randomUUID().slice(-8);
 let channels = JSON.parse(localStorage.getItem('channels')||'{}');
-if(!channels.announcement) channels.announcement={name:'📢 Pemberitahuan',msgs:[],adminOnly:true};
-if(!channels.all) channels.all={name:'💬 All',msgs:[],adminOnly:false};
+if(!channels.announcement)channels.announcement={name:'📢 Pemberitahuan',msgs:[],adminOnly:true};
+if(!channels.all)channels.all={name:'💬 All',msgs:[],adminOnly:false};
 
-function renderChannels() {
-  const list = document.getElementById('channelList');
-  list.innerHTML = '';
+function renderChannels(){
+  const list=document.getElementById('channelList');
+  list.innerHTML='';
   Object.entries(channels).forEach(([id,{name}])=>{
     const div=document.createElement('div');
     div.className='channel';
@@ -20,23 +20,22 @@ function renderChannels() {
     list.appendChild(div);
   });
 }
-function createChannel() {
-  const name = prompt('Nama Channel Baru:');
-  if(!name) return;
-  const id = btoa(name + Date.now()).replace(/[^a-zA-Z0-9]/g,'');
+function createChannel(){
+  const name=prompt('Nama Channel Baru:');if(!name)return;
+  const id=btoa(name+Date.now()).replace(/[^a-zA-Z0-9]/g,'');
   channels[id]={name,msgs:[],adminOnly:false};
   localStorage.setItem('channels',JSON.stringify(channels));
   renderChannels();
 }
-function toggleAdmin() {
+function toggleAdmin(){
   document.getElementById('adminModal').style.display='flex';
 }
-function closeAdmin() {
+function closeAdmin(){
   document.getElementById('adminModal').style.display='none';
 }
-function renameChannel() {
-  const newName = prompt('Nama baru:', channels['announcement'].name);
-  if (!newName) return;
+function renameChannel(){
+  const newName=prompt('Nama baru:',channels['announcement'].name);
+  if(!newName)return;
   channels['announcement'].name=newName;
   localStorage.setItem('channels',JSON.stringify(channels));
   closeAdmin();
