@@ -7,9 +7,7 @@ if(!c){alert('Channel tidak ditemukan');location.href='index.html';}
 document.getElementById('chatTitle').textContent=c.name;
 
 function encrypt(msg){
-  const enc=new TextEncoder();
-  const cipher=btoa(msg); // simple encode
-  return cipher;
+  return btoa(msg); // simple encode
 }
 function decrypt(str){
   return atob(str);
